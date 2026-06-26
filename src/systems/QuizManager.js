@@ -122,15 +122,16 @@ export class QuizManager {
   }
 
   _hideHUD() {
+    const bg = this.hudBg;
+    const title = this.hudTitle;
+    const hint = this.hudHint;
+    this.hudBg = this.hudTitle = this.hudHint = null;
     this.scene.tweens.add({
-      targets: [this.hudBg, this.hudTitle, this.hudHint],
+      targets: [bg, title, hint],
       y: '-=110',
       duration: 280,
       ease: 'Sine.easeIn',
-      onComplete: () => {
-        this.hudBg?.destroy(); this.hudTitle?.destroy(); this.hudHint?.destroy();
-        this.hudBg = this.hudTitle = this.hudHint = null;
-      },
+      onComplete: () => { bg?.destroy(); title?.destroy(); hint?.destroy(); },
     });
   }
 
