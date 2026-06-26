@@ -128,7 +128,7 @@ export class LaneManager {
 
   // Convert lanes ~AHEAD rows ahead of playerY to grass+grass+quiz in-place.
   scheduleQuizAhead(playerY) {
-    const AHEAD = 7;
+    const AHEAD = 12;
     const baseY = (Math.floor(playerY / CELL_SIZE) - AHEAD) * CELL_SIZE;
     let quizLane = null;
     // i=2 and i=1 become grass, i=0 becomes quiz

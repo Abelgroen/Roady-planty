@@ -98,10 +98,17 @@ export class GameScene extends Phaser.Scene {
       this.stepsSinceQuiz++;
       this.scoreManager.update(this.player.gridY);
 
-      // Schedule quiz lane ahead
+      // Schedule quiz lane ahead and immediately show gates + HUD
       if (this.stepsSinceQuiz >= STEPS_BETWEEN_QUIZ && !this.pendingQuizLane && this.quizManager.state === 'IDLE') {
         this.stepsSinceQuiz = 0;
-        this.pendingQuizLane = this.laneManager.scheduleQuizAhead(this.player.g.y);
+        const quizLane = this.laneManager.scheduleQuizAhead(this.player.g.y);
+        if (quizLane) {
+          this.pendingQuizLane = quizLane;
+          this.quizManager.activate(quizLane.y,
+            () => this._onCorrectGate(),
+            () => this._onWrongGate(),
+          );
+        }
       }
     }
 
@@ -137,13 +144,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   _checkQuizEntry(lane, px, py) {
-    if (this.quizManager.state === 'IDLE' && this.pendingQuizLane === lane) {
-      this.pendingQuizLane = null;
-      this.quizManager.activate(lane.y,
-        () => this._onCorrectGate(),
-        () => this._onWrongGate(),
-      );
-    }
+    if (lane === this.pendingQuizLane) this.pendingQuizLane = null;
     if (this.quizManager.state === 'ACTIVE') {
       this.quizManager.checkPlayerInGate(px, py);
     }
